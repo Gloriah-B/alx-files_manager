@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 import { promisify } from 'util';
 
-// Class to define methods for commonly used Redis commands
+// class to define methods for commonly used redis commands
 class RedisClient {
   constructor() {
     this.client = createClient();
@@ -10,33 +10,35 @@ class RedisClient {
     });
   }
 
-  // Check connection status and report
+  // check connection status and report
   isAlive() {
-    return this.client.connected;
+    if (this.client.connected) {
+      return true;
+    }
+    return false;
   }
 
-  // Get value for a given key from Redis server
+  // get value for given key from redis server
   async get(key) {
     const redisGet = promisify(this.client.get).bind(this.client);
     const value = await redisGet(key);
     return value;
   }
 
-  // Set key-value pair to Redis server with expiration time
+  // set key value pair to redis server
   async set(key, value, time) {
     const redisSet = promisify(this.client.set).bind(this.client);
     await redisSet(key, value);
     await this.client.expire(key, time);
   }
 
-  // Delete key-value pair from Redis server
+  // del key vale pair from redis server
   async del(key) {
     const redisDel = promisify(this.client.del).bind(this.client);
     await redisDel(key);
   }
 }
 
-// Export the Redis client instance
 const redisClient = new RedisClient();
 
 module.exports = redisClient;
