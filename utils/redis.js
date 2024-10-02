@@ -15,7 +15,7 @@ class RedisClient {
     if (this.client.connected) {
       return true;
     }
-	return false;
+    return false;
   }
 
   // get value for given key from redis server
